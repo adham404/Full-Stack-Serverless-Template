@@ -27,9 +27,9 @@ steps:
     args:
       - -c
       - |
-        BUILD_ARGS=$(cat build-args.txt | xargs)
-        echo "[INFO] Building Docker image with args: $BUILD_ARGS"
-        docker build $BUILD_ARGS -t gcr.io/$PROJECT_ID/backend ./backend
+        BUILD_ARGS=$$(cat build-args.txt | xargs)
+        echo "[INFO] Building Docker image with args: $$BUILD_ARGS"
+        docker build $$BUILD_ARGS -t gcr.io/$PROJECT_ID/backend ./backend
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'push-image'
@@ -41,14 +41,14 @@ steps:
     args:
       - -c
       - |
-        DEPLOY_FLAGS=$(cat deploy-flags.txt | xargs)
-        echo "[INFO] Deploying with flags: $DEPLOY_FLAGS"
+        DEPLOY_FLAGS=$$(cat deploy-flags.txt | xargs)
+        echo "[INFO] Deploying with flags: $$DEPLOY_FLAGS"
         gcloud run deploy serverless-trial \
           --image=gcr.io/$PROJECT_ID/backend \
           --region=YOUR_REGION \
           --platform=managed \
           --allow-unauthenticated \
-          $DEPLOY_FLAGS
+          $$DEPLOY_FLAGS
 
 
 options:
