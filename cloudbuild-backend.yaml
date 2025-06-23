@@ -14,7 +14,7 @@ steps:
         for secret in $(cat secrets.txt); do
           val=$(gcloud secrets versions access latest --secret="$secret")
           echo "--build-arg $secret=$val" >> build-args.txt
-          printf '%s\0' "--update-secrets" "$secret=$val" >> deploy-flags.txt
+          echo "--update-secrets $secret=^,^$val" >> deploy-flags.txt
         done
 
         # Generate --update-secrets flags
@@ -45,13 +45,14 @@ steps:
     args:
       - -c
       - |
-        echo "[INFO] Deploying with secrets..."
+        DEPLOY_FLAGS=$$(cat deploy-flags.txt | xargs)
+        echo "[INFO] Deploying with flags: $$DEPLOY_FLAGS"
         gcloud run deploy serverless-trial \
           --image=gcr.io/$PROJECT_ID/backend \
           --region=us-central1 \
           --platform=managed \
           --allow-unauthenticated \
-          $(cat deploy-flags.txt | xargs -0)
+          $$DEPLOY_FLAGS
 
 
 options:
