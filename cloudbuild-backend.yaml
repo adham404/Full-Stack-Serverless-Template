@@ -27,9 +27,9 @@ steps:
     args:
       - -c
       - |
-        BUILD_ARGS=$$(cat build-args.txt | xargs)
+        BUILD_ARGS=$$(cat build-args.txt | tr '\n' ' ')
         echo "[INFO] Building Docker image with args: $$BUILD_ARGS"
-        docker build $$BUILD_ARGS -t gcr.io/$PROJECT_ID/backend ./backend
+        eval "docker build $$BUILD_ARGS -t gcr.io/$PROJECT_ID/backend ./backend"
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'push-image'
