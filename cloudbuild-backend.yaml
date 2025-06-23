@@ -49,3 +49,7 @@ steps:
           --platform=managed \
           --allow-unauthenticated \
           $DEPLOY_FLAGS
+
+
+options:
+  logging: CLOUD_LOGGING_ONLY

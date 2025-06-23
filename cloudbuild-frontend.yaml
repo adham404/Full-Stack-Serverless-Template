@@ -10,3 +10,7 @@ steps:
   - name: 'gcr.io/firebase-ci/firebase'
     entrypoint: bash
     args: ['-c', 'firebase deploy --only hosting --project $PROJECT_ID --token "$(gcloud auth print-access-token)"']
+
+
+options:
+  logging: CLOUD_LOGGING_ONLY
