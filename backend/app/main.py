@@ -31,3 +31,11 @@ if settings.all_cors_origins:
     )
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
+
+
+@app.get("/")
+def read_root():
+    """
+    Root endpoint for health checks.
+    """
+    return {"message": "Hello World"}
