@@ -47,6 +47,7 @@ steps:
         echo "[INFO] Deploying with flags: $$DEPLOY_FLAGS"
         gcloud run deploy serverless-trial \
           --image=gcr.io/$PROJECT_ID/backend \
+          --region=global \
           --platform=managed \
           --allow-unauthenticated \
           $$DEPLOY_FLAGS
