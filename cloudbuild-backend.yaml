@@ -10,16 +10,18 @@ steps:
 
         # Generate --build-arg flags
         echo -n "" > build-args.txt
+        echo -n "" > deploy-flags.txt
         for secret in $(cat secrets.txt); do
           val=$(gcloud secrets versions access latest --secret="$secret")
           echo "--build-arg $secret=$val" >> build-args.txt
+          echo "--update-secrets $secret=$secret:latest" >> deploy-flags.txt
         done
 
         # Generate --update-secrets flags
-        echo -n "" > deploy-flags.txt
-        while read secret; do
-          echo "--update-secrets $secret=$secret:latest" >> deploy-flags.txt
-        done < secrets.txt
+        # echo -n "" > deploy-flags.txt
+        # while read secret; do
+        #   echo "--update-secrets $secret=$secret:latest" >> deploy-flags.txt
+        # done < secrets.txt
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'build-backend'
