@@ -42,4 +42,4 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 EXPOSE 8080
 
-CMD ["fastapi", "run", "--workers", "4", "--port", "${PORT:-8080}", "app/main.py"]
+CMD fastapi run --workers 4 --port ${PORT:-8080} app/main.py
