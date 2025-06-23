@@ -1,0 +1,51 @@
+steps:
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'generate-secret-flags'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        echo '[INFO] Listing secrets...'
+        gcloud secrets list --format="value(name)" > secrets.txt
+
+        # Generate --build-arg flags
+        echo -n "" > build-args.txt
+        for secret in $(cat secrets.txt); do
+          val=$(gcloud secrets versions access latest --secret="$secret")
+          echo "--build-arg $secret=$val" >> build-args.txt
+        done
+
+        # Generate --update-secrets flags
+        echo -n "" > deploy-flags.txt
+        while read secret; do
+          echo "--update-secrets $secret=$secret:latest" >> deploy-flags.txt
+        done < secrets.txt
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-backend'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        BUILD_ARGS=$(cat build-args.txt | xargs)
+        echo "[INFO] Building Docker image with args: $BUILD_ARGS"
+        docker build $BUILD_ARGS -t gcr.io/$PROJECT_ID/backend ./backend
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'push-image'
+    args: ['push', 'gcr.io/$PROJECT_ID/backend']
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'deploy-to-cloud-run'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        DEPLOY_FLAGS=$(cat deploy-flags.txt | xargs)
+        echo "[INFO] Deploying with flags: $DEPLOY_FLAGS"
+        gcloud run deploy serverless-trial \
+          --image=gcr.io/$PROJECT_ID/backend \
+          --region=YOUR_REGION \
+          --platform=managed \
+          --allow-unauthenticated \
+          $DEPLOY_FLAGS

@@ -1,0 +1,12 @@
+steps:
+  - name: 'gcr.io/cloud-builders/npm'
+    dir: 'frontend'
+    args: ['ci']
+
+  - name: 'gcr.io/cloud-builders/npm'
+    dir: 'frontend'
+    args: ['run', 'build']
+
+  - name: 'gcr.io/firebase-ci/firebase'
+    entrypoint: bash
+    args: ['-c', 'firebase deploy --only hosting --project $PROJECT_ID --token "$(gcloud auth print-access-token)"']
