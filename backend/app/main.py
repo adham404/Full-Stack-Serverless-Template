@@ -8,7 +8,9 @@ from app.core.config import settings
 
 
 def custom_generate_unique_id(route: APIRoute) -> str:
-    return f"{route.tags[0]}-{route.name}"
+    if route.tags:
+        return f"{route.tags[0]}-{route.name}"
+    return route.name
 
 
 if settings.SENTRY_DSN and settings.ENVIRONMENT != "local":
@@ -30,7 +32,21 @@ if settings.all_cors_origins:
         allow_headers=["*"],
     )
 
+
+@app.get("/")
+def read_root():
+    """Root endpoint providing basic API information."""
+    return {
+        "message": "Welcome to the API",
+        "project": settings.PROJECT_NAME,
+        "version": "1.0.0",
+        "docs": f"{settings.API_V1_STR}/docs",
+        "openapi": f"{settings.API_V1_STR}/openapi.json"
+    }
+
+
 app.include_router(api_router, prefix=settings.API_V1_STR)
+
 
 
 
