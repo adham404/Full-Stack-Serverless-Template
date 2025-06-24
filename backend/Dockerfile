@@ -46,6 +46,7 @@ EXPOSE 8080
 # CMD ["fastapi", "run", "app/main.py", "--host", "0.0.0.0", "--port", "8080"]
 
 # Production CMD with prestart script
-# CMD ["bash", "-c", "bash scripts/prestart.sh && fastapi run app/main.py --host 0.0.0.0 --port 8080"]
+CMD ["bash", "-c", "echo 'Starting container...' && python -c 'print(\"Python works\")' && echo 'Testing imports...' && python -c 'from app.main import app; print(\"Import successful\")' && echo 'Starting FastAPI...' && fastapi run app/main.py --host 0.0.0.0 --port 8080"]
 
-CMD ["fastapi", "run", "app/main.py", "--host", "0.0.0.0", "--port", "8080"]
+# CMD ["bash", "-c", "bash scripts/prestart.sh && fastapi run app/main.py --host 0.0.0.0 --port 8080"]
+# CMD ["fastapi", "run", "app/main.py", "--host", "0.0.0.0", "--port", "8080"]
