@@ -53,8 +53,6 @@ steps:
           --region=us-central1 \
           --platform=managed \
           --allow-unauthenticated \
-          --timeout 900 \
-          --cpu-startup-timeout 600 \
           $$DEPLOY_FLAGS"
 
 

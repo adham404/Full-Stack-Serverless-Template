@@ -46,4 +46,6 @@ EXPOSE 8080
 # CMD ["fastapi", "run", "app/main.py", "--host", "0.0.0.0", "--port", "8080"]
 
 # Production CMD with prestart script
-CMD ["bash", "-c", "bash scripts/prestart.sh && fastapi run app/main.py --host 0.0.0.0 --port 8080"]
+# CMD ["bash", "-c", "bash scripts/prestart.sh && fastapi run app/main.py --host 0.0.0.0 --port 8080"]
+
+CMD ["fastapi", "run", "app/main.py", "--host", "0.0.0.0", "--port", "8080"]
