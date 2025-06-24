@@ -50,7 +50,7 @@ EXPOSE 8080
 
 # CMD ["python", "-c", "import time; print('Container started successfully!', flush=True); time.sleep(10); print('Python and container work!', flush=True); import http.server; import socketserver; PORT = 8080; Handler = http.server.SimpleHTTPRequestHandler; with socketserver.TCPServer(('', PORT), Handler) as httpd: print(f'Server running on port {PORT}', flush=True); httpd.serve_forever()"]
 # CMD ["bash", "-c", "echo 'Starting container...' && python -c 'print(\"Python works\")' && echo 'Testing imports...' && python -c 'from app.main import app; print(\"Import successful\")' && echo 'Starting FastAPI...' && fastapi run app/main.py --host 0.0.0.0 --port 8080"]
-CMD ["bash", "-c", "echo 'Container started' && echo 'Testing config import...' && python -c 'from app.core.config import settings; print(\"Config loaded successfully\")' && echo 'Testing app import...' && python -c 'from app.main import app; print(\"App imported successfully\")' && echo 'All imports successful!' && python -m http.server 8080"]
+CMD ["bash", "-c", "echo 'Container started' && echo 'Environment check:' && env | grep -E '(PROJECT_NAME|POSTGRES_USER)' | head -5 && echo 'Testing config...' && python -c 'from app.core.config import settings; print(\"Config loaded:\", settings.PROJECT_NAME)' && python -m http.server 8080"]
 # CMD ["fastapi", "run", "app/main.py", "--host", "0.0.0.0", "--port", "8080"]
 
 # CMD ["bash", "-c", "bash scripts/prestart.sh && fastapi run app/main.py --host 0.0.0.0 --port 8080"]
