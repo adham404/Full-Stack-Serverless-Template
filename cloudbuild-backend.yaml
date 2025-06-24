@@ -41,19 +41,31 @@ steps:
     args: ['push', 'gcr.io/$PROJECT_ID/backend']
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'clear-existing-env-vars'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        echo "[INFO] Clearing existing environment variables and secrets..."
+        gcloud run services update serverless-trial \
+          --region=us-central1 \
+          --clear-env-vars \
+          --clear-secrets || echo "Failed to clear or service doesn't exist, continuing..."
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'deploy-to-cloud-run'
     entrypoint: 'bash'
     args:
       - -c
       - |
-        # DEPLOY_FLAGS=$$(cat deploy-flags.txt | tr '\n' ' ')
+        DEPLOY_FLAGS=$$(cat deploy-flags.txt | tr '\n' ' ')
         echo "[INFO] Deploying with flags: $$DEPLOY_FLAGS"
         eval "gcloud run deploy serverless-trial \
           --image=gcr.io/$PROJECT_ID/backend \
           --region=us-central1 \
           --platform=managed \
-          --allow-unauthenticated"
-          # $$DEPLOY_FLAGS"
+          --allow-unauthenticated \
+          $$DEPLOY_FLAGS"
 
 
 options:
