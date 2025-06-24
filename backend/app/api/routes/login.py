@@ -20,6 +20,13 @@ from app.utils import (
 
 router = APIRouter(tags=["login"])
 
+@router.get("/")
+def read_root():
+    """
+    Root endpoint for health checks.
+    """
+    return {"message": "Hello World"}
+
 
 @router.post("/login/access-token")
 def login_access_token(
