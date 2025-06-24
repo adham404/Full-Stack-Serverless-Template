@@ -46,14 +46,14 @@ steps:
     args:
       - -c
       - |
-        DEPLOY_FLAGS=$$(cat deploy-flags.txt | xargs)
+        DEPLOY_FLAGS=$$(cat deploy-flags.txt | tr '\n' ' ')
         echo "[INFO] Deploying with flags: $$DEPLOY_FLAGS"
-        gcloud run deploy serverless-trial \
+        eval "gcloud run deploy serverless-trial \
           --image=gcr.io/$PROJECT_ID/backend \
           --region=us-central1 \
           --platform=managed \
           --allow-unauthenticated \
-          $$DEPLOY_FLAGS
+          $$DEPLOY_FLAGS"
 
 
 options:
