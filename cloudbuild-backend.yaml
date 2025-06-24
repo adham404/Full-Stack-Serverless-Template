@@ -9,11 +9,11 @@ steps:
         gcloud secrets list --format="value(name)" > secrets.txt
 
         # Generate --build-arg flags
-        # echo -n "" > build-args.txt
+        echo -n "" > build-args.txt
         echo -n "" > deploy-flags.txt
         for secret in $(cat secrets.txt); do
           val=$(gcloud secrets versions access latest --secret="$secret")
-          # echo "--build-arg $secret=$val" >> build-args.txt
+          echo "--build-arg $secret=$val" >> build-args.txt
           echo "--set-env-vars $secret=$val" >> deploy-flags.txt
         done
 
@@ -31,10 +31,10 @@ steps:
     args:
       - -c
       - |
-        # BUILD_ARGS=$$(cat build-args.txt | tr '\n' ' ')
-        # echo "[INFO] Building Docker image with args: $$BUILD_ARGS"
-        # eval "docker build $$BUILD_ARGS -t gcr.io/$PROJECT_ID/backend ./backend"
-        eval "docker build -t gcr.io/$PROJECT_ID/backend ./backend"
+        BUILD_ARGS=$$(cat build-args.txt | tr '\n' ' ')
+        echo "[INFO] Building Docker image with args: $$BUILD_ARGS"
+        eval "docker build $$BUILD_ARGS -t gcr.io/$PROJECT_ID/backend ./backend"
+        # eval "docker build -t gcr.io/$PROJECT_ID/backend ./backend"
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'push-image'
