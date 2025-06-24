@@ -17,11 +17,11 @@ steps:
           # echo "--set-env-vars $secret=$val" >> deploy-flags.txt
         done
 
-        # Generate --update-secrets flags
-        # echo -n "" > deploy-flags.txt
-        # while read secret; do
-        #   echo "--update-secrets $secret=$secret:latest" >> deploy-flags.txt
-        # done < secrets.txt
+        Generate --update-secrets flags
+        echo -n "" > deploy-flags.txt
+        while read secret; do
+          echo "--update-secrets $secret=$secret:latest" >> deploy-flags.txt
+        done < secrets.txt
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'build-backend'
@@ -45,14 +45,14 @@ steps:
     args:
       - -c
       - |
-        # DEPLOY_FLAGS=$$(cat deploy-flags.txt | xargs)
-        # echo "[INFO] Deploying with flags: $$DEPLOY_FLAGS"
+        DEPLOY_FLAGS=$$(cat deploy-flags.txt | xargs)
+        echo "[INFO] Deploying with flags: $$DEPLOY_FLAGS"
         gcloud run deploy serverless-trial \
           --image=gcr.io/$PROJECT_ID/backend \
           --region=us-central1 \
           --platform=managed \
           --allow-unauthenticated \
-          # $$DEPLOY_FLAGS
+          $$DEPLOY_FLAGS
 
 
 options:
