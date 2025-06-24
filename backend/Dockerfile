@@ -42,4 +42,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 EXPOSE 8080
 
+# For debugging: Skip prestart script to test if the app itself works
+# CMD ["fastapi", "run", "app/main.py", "--host", "0.0.0.0", "--port", "8080"]
+
+# Production CMD with prestart script
 CMD ["bash", "-c", "bash scripts/prestart.sh && fastapi run app/main.py --host 0.0.0.0 --port 8080"]
