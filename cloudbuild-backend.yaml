@@ -10,11 +10,11 @@ steps:
 
         # Generate --build-arg flags
         echo -n "" > build-args.txt
-        echo -n "" > deploy-flags.txt
+        # echo -n "" > deploy-flags.txt
         for secret in $(cat secrets.txt); do
           val=$(gcloud secrets versions access latest --secret="$secret")
           echo "--build-arg $secret=$val" >> build-args.txt
-          echo "--set-env-vars $secret=$val" >> deploy-flags.txt
+          # echo "--set-env-vars $secret=$val" >> deploy-flags.txt
         done
 
         # Generate --update-secrets flags
